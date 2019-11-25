@@ -10,6 +10,11 @@ def create
     render json: pokemon
 end
 
+def destroy 
+    pokemon = Pokemon.find(params[:id])
+    pokemon.delete
+    render json: pokemon
+end
 
 private
     def pokemon_params

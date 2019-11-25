@@ -44,7 +44,7 @@ trainerList.addEventListener("click", function(event){
         addPokemon(event.target)    
     }
     else if (event.target.className === "release"){
-        releasePokemon(event.target)
+        releasePokemon(parseInt(event.target.dataset.pokemonId))
     }
 })
 
@@ -53,8 +53,8 @@ function addPokemon(eventTarget){
         return {
             method: "POST",
             headers: {
-                "Content-Type" : "application/json",
-                "Accept" : "application/json"
+                "Content-Type": "application/json",
+                "Accept": "application/json"
             },
             body : JSON.stringify({
                 trainer_id: `${eventTarget.dataset.trainerId}`
@@ -68,11 +68,18 @@ return fetch(POKEMONS_URL, configObj())
 
 }
 
-function releasePokemon(eventTarget){
-    console.log(eventTarget)
+function releasePokemon(id){
+    return fetch(POKEMONS_URL + '/' + id, {method: "DELETE"})
+            .then(resp => resp.json())
+            .then(pokemon => removePokemonLi(pokemon))
+}   
+
+
+function removePokemonLi(pokemon){
+    const ul = document.querySelector(`[data-id="${pokemon.trainer_id}"]`).children[2]
+    const li = document.querySelector(`button[data-pokemon-id="${pokemon.id}"]`).parentNode
+    ul.removeChild(li)
 }
-
-
 
 function main(){
     fetchTrainers()
